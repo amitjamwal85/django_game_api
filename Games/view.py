@@ -1,11 +1,12 @@
 from django.contrib.auth.models import User
 
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 from rest_framework.authtoken.models import Token
 from Games.models import Games, ContactUs
-from Games.serializers import GameSerializer, LoginSerializer, ContactUsSerializer
+from Games.serializers import GameSerializer, LoginSerializer, ContactUsSerializer, AddS3FileSerializer
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny
@@ -33,6 +34,37 @@ class GameView(viewsets.ModelViewSet):
         data['sports'] = serializer_sports.data
         data['racing'] = serializer_racing.data
         return Response( data )
+
+
+    @action(
+        methods=["post", "get"],
+        detail=False,
+        permission_classes=[IsAuthenticated],
+        url_path="adds3file",
+        url_name="adds3file",
+        serializer_class=AddS3FileSerializer,
+    )
+    def adds3file(self, request):
+        if request.method == "POST":
+            serializer = AddS3FileSerializer(data=request.data)
+            if serializer.is_valid( raise_exception=True ):
+                validated_data = serializer.validated_data
+                s3file = serializer.create(validated_data=validated_data)
+                return Response(
+                    {"status": f'{s3file.id}'},
+                    status=status.HTTP_201_CREATED,
+                )
+
+        if request.method == "GET":
+            serializer = AddS3FileSerializer(request.user)
+            data = serializer.get_allfiles()
+            return_data = dict()
+            return_data['S3URL'] = data
+            return Response(return_data, status=status.HTTP_200_OK )
+
+
+
+
 
 
 class LoginView(APIView):

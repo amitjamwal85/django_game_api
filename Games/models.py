@@ -20,3 +20,17 @@ class ContactUs(models.Model):
 
     class Meta:
         db_table = "tbl_contact_us"
+
+
+def directory_path(self, filename):
+    return "songs/{}".format(
+       filename.replace(" ", "_")
+    )
+
+
+class AddS3File(models.Model):
+    file = models.FileField(upload_to=directory_path)
+    created_at = models.DateTimeField( auto_now_add=True)
+
+    class Meta:
+        db_table = "tbl_s3_file"
