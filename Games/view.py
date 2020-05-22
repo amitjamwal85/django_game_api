@@ -63,10 +63,6 @@ class GameView(viewsets.ModelViewSet):
             return Response(return_data, status=status.HTTP_200_OK )
 
 
-
-
-
-
 class LoginView(APIView):
 
     def post(self, request):
