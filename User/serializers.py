@@ -155,6 +155,13 @@ class ServerSerializer(serializers.ModelSerializer):
 ##########################################################################################################
 
 
+class EmailSerializer(serializers.Serializer):
+    recipient_list = serializers.ListField(required=True)
+    email_body = serializers.CharField( required=True )
+    email_subject = serializers.CharField( required=True )
+
+
+
 class PasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = password_field()

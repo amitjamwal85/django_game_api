@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenViewBase
 from rest_framework.viewsets import GenericViewSet
 from DjangoDRF.exceptions import TokenError, InvalidToken
+from DjangoDRF.utils.sendEmail import ClassSendEmail
 from User.models import Server, Post, Comments
 from User.serializers import TokenObtainPairSerializer, TokenRefreshSerializer, UserSerializer, RegistrationSerializer, \
-    ServerSerializer, PasswordSerializer, UserProfileSerializer, PostSerializer, CommentSerializer
+    ServerSerializer, PasswordSerializer, UserProfileSerializer, PostSerializer, CommentSerializer, EmailSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from six import text_type
@@ -117,6 +118,26 @@ class UserAPIView(mixins.RetrieveModelMixin,
                 {"status": "success"}, status=status.HTTP_200_OK
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+    @action( methods=['post'],
+             detail=False,
+             permission_classes=[AllowAny],
+             url_path='sendemail',
+             url_name='sendemail',
+             serializer_class=EmailSerializer )
+    def sendemail(self, request):
+        data = request.data
+        serializer = EmailSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            sendEmail = ClassSendEmail(data)
+            resp = sendEmail.SendEmail()
+            if resp:
+                return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"status": "failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response( serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 ############################################################################################################

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Elastic Search</title>
+</head>
+<body>
+<form method="get">
+    <input id="q" name="q" type="text" placeholder="search here...">
+</form>
+
+<br/>
+{% for item  in posts %}
+    <ul>
+        <li>
+            <span>{{ item.id }}</span>
+            <span>{{ item.title }}</span>
+            <span>{{ item.description }}</span>
+            <span>{{ item.slug }}</span>
+        </li>
+    </ul>
+{%  endfor %}
+</body>
+</html>

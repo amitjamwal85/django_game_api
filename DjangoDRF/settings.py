@@ -33,8 +33,13 @@ INSTALLED_APPS = [
     'Webapp',
     'Games',
     'graphene_django',
-    'GraphQLTest'
+    'GraphQLTest',
+    'ESearch',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf'
 ]
+
+ELASTICSEARCH_DSL = {"default": {"hosts": "localhost:9200"}}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,7 +53,7 @@ MIDDLEWARE = [
     'DjangoDRF.middleware.StackOverflowMiddleware',
 ]
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
@@ -213,3 +218,6 @@ LOGIN_URL = '/webapp/login/'
 LOGIN_REDIRECT_URL = '/webapp/login/'
 
 
+AUTH_EMAIL = 'amit.jamwal@genrosys.com'
+AUTH_EMAIL_PWD = 'amit_2015_genrosyS'
+AUTH_DOMAIN = 'mail.aativamail.com'

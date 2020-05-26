@@ -3,11 +3,19 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+import os
 
 def user_login(request):
     template = loader.get_template( 'login.html' )
     return HttpResponse( template.render( {}, request ) )
+
+
+def showcertfile(request, key):
+    BASE_DIR = os.path.dirname(os.path.dirname( os.path.abspath( __file__ ) ) )
+    wf_filepath = f'{BASE_DIR}/well-known/pki-validation/{key}'
+    if os.path.exists(wf_filepath):
+        with open(wf_filepath, 'rb') as fh:
+            return HttpResponse(fh.read())
 
 
 def user_logout(request):

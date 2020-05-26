@@ -10,6 +10,8 @@ from User.view import TokenObtainPairView, TokenRefreshView, UserAPIView, Server
 from rest_framework.documentation import include_docs_urls
 from graphene_django.views import GraphQLView
 # from rest_framework_simplejwt import views as jwt_views
+from Webapp import views
+from ESearch import views as search_view
 
 login = TokenObtainPairView.as_view()
 refresh = TokenRefreshView.as_view()
@@ -25,6 +27,9 @@ urlpatterns = [
     path('api/token/', login, name="user-login"),
     path('api/token/refresh/', refresh, name='token_refresh'),
     path( "graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+
+    path('search', search_view.search, name='search'),
+    path('well-known/pki-validation/<str:key>', views.showcertfile, name='showcertfile'),
 ]
 
 router = routers.SimpleRouter()
