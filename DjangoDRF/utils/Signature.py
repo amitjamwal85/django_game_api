@@ -34,7 +34,8 @@ print("Authorization:", headers.get('Authorization'))
 print("x-amz-date:", headers.get('x-amz-date'))
 # Make the request.
 
-resp = requests.post(URL, headers=headers, data=content)
-print("resp:", resp.text)
+# resp = requests.post(URL, headers=headers, data=content)
+# print("resp:", resp.status_code)
+# print("resp:", resp.text)
 #r.raise_for_status()
 
