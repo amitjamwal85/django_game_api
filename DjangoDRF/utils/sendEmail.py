@@ -30,10 +30,9 @@ class ClassSendEmail():
             # server.sendmail(settings.AUTH_EMAIL, self.recipient_list, text)
 
             for email in self.recipient_list:
+                print("Sending...:", email)
                 msg['To'] = email
                 server.sendmail( settings.AUTH_EMAIL, email, text )
-
-
             server.quit()
             return "success"
         except:
