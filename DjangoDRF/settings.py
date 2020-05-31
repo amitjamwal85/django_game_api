@@ -221,3 +221,6 @@ LOGIN_REDIRECT_URL = '/webapp/login/'
 AUTH_EMAIL = 'amit.jamwal@genrosys.com'
 AUTH_EMAIL_PWD = 'amit_2015_genrosyS'
 AUTH_DOMAIN = 'mail.aativamail.com'
+
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/'

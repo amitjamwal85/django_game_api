@@ -4,6 +4,16 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import os
+from django.contrib import messages
+from Webapp.tasks import sleepy
+
+
+def celery_task(request):
+    template = loader.get_template( 'celery.html' )
+    sleepy.delay(10)
+    messages.success(request, 'We are processing request wait for some time.' )
+    return HttpResponse( template.render( {}, request ) )
+
 
 def user_login(request):
     template = loader.get_template( 'login.html' )
