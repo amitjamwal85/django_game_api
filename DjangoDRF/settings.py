@@ -1,6 +1,7 @@
 import os
 import sys
 from datetime import timedelta
+from decouple import config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -36,8 +37,11 @@ INSTALLED_APPS = [
     'GraphQLTest',
     'ESearch',
     'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf'
+    'django_elasticsearch_dsl_drf',
+    'import_export'
 ]
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 ELASTICSEARCH_DSL = {"default": {"hosts": "localhost:9200"}}
 
@@ -195,9 +199,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
-AWS_ACCESS_KEY_ID = 'AKIATSF6SDROSKWO5XEE'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'djangoapi'
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
@@ -210,7 +214,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 # STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# DEFAULT_FILE_STORAGE = 'DjangoDRF.storage_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = 'DjangoDRF.storage_backends.MediaStorage'
 MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, 'media')
 
 # User for login_required decorator

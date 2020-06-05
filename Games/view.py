@@ -51,7 +51,7 @@ class GameView(viewsets.ModelViewSet):
                 validated_data = serializer.validated_data
                 s3file = serializer.create(validated_data=validated_data)
                 return Response(
-                    {"status": f'{s3file.id}'},
+                    {"status": f'{s3file.file.url}'},
                     status=status.HTTP_201_CREATED,
                 )
 

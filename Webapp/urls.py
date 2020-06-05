@@ -8,4 +8,7 @@ urlpatterns = [
     path('index/', views.index, name='index'),
 
     path('celery_task/', views.celery_task, name='celery_task'),
+
+    path('posts/', views.detail, name='posts'),
+    path('posts/<slug:slug>', views.slug_detail, name='slug_detail')
 ]

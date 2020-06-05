@@ -1,10 +1,13 @@
+from django.shortcuts import render
 from django.template import loader
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import os
 from django.contrib import messages
+
+from Webapp.models import  Posts
 from Webapp.tasks import sleepy
 
 
@@ -53,3 +56,26 @@ def login_action(request):
         print( "Someone tried to login and failed." )
         print( f"They used username: {username} and password: {password}" )
         return HttpResponse( "Invalid login details given" )
+
+
+
+
+
+def detail(request):
+    posts = Posts.objects.all()
+    context = {
+        'posts': posts
+    }
+    return render(request, 'slug/details.html', context )
+
+
+def slug_detail(request, slug):
+    q = Posts.objects.filter(slug__iexact=slug)
+    if q.exists():
+        q = q.first()
+    else:
+        raise Http404("Page not found")
+    context = {
+        'post': q
+    }
+    return render(request, 'slug/view_slug.html', context )
