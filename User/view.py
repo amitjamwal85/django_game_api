@@ -3,6 +3,8 @@ from rest_framework import status, generics, mixins
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenViewBase
 from rest_framework.viewsets import GenericViewSet
+
+from DjangoDRF import settings
 from DjangoDRF.exceptions import TokenError, InvalidToken
 from DjangoDRF.utils.sendEmail import ClassSendEmail
 from User.models import Server, Post, Comments
@@ -19,8 +21,9 @@ from django.contrib.auth import login
 from User.utils import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin
 from graphene_django.views import GraphQLView
-
-
+import pickle
+import numpy as np
+import os
 
 class PrivateGraphQLView(LoginRequiredMixin, GraphQLView):
     pass
@@ -245,6 +248,24 @@ class ServerView(viewsets.ModelViewSet):
             return Response( serializer.data, status=200 )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+    @action( detail=False,
+             methods=['POST'],
+             url_name="process-ml",
+             url_path="process-ml",
+             permission_classes=[AllowAny],
+             )
+    def processML(self, request):
+        data = request.data
+        model_data = [np.array(list(data.values()))]
+        print(f"model_data: {model_data}")
+        model_file = os.path.join(settings.BASE_DIR, 'User/MLmodel/model.pkl')
+        print(f"Model file path: {model_file}")
+        model = pickle.load(open(model_file, 'rb' ))
+        prediction = model.predict(model_data)
+        output = round(prediction[0], 2)
+        print(f"output : {output}")
+        return Response( output, status=status.HTTP_200_OK )
 
 
 
