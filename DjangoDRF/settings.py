@@ -21,6 +21,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,7 +39,8 @@ INSTALLED_APPS = [
     'ESearch',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
-    'import_export'
+    'import_export',
+    'justchat'
 ]
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
@@ -134,7 +136,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DjangoDRF.wsgi.application'
+ASGI_APPLICATION = 'DjangoDRF.routing.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

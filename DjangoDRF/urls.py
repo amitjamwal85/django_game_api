@@ -32,6 +32,7 @@ urlpatterns = [
 
     path('search', search_view.search, name='search'),
     path('well-known/pki-validation/<str:key>', views.showcertfile, name='showcertfile'),
+    path('chat/', include('justchat.urls')),
 ]
 
 router = routers.SimpleRouter()

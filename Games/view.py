@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-
+from rest_framework.schemas import AutoSchema
+import coreschema, coreapi
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -64,9 +65,30 @@ class GameView(viewsets.ModelViewSet):
 
 
 class LoginView(APIView):
+    schema = AutoSchema(
+        manual_fields=[
+            coreapi.Field(
+                name="username",
+                required=True,
+                # location="query",
+                location="body",
+                schema=coreschema.String(description="Username is required"),
+            ),
+            coreapi.Field(
+                name="password",
+                required=True,
+                # location="query",
+                location="body",
+                schema=coreschema.Enum(
+                    ("users", "songs", "trending", "notifications", "lyrics")
+                )
+            ),
+        ]
+    )
 
     def post(self, request):
         data = request.data
+        print("data:", data)
         serializer = LoginSerializer( data=data )
         if serializer.is_valid( raise_exception=True ):
             username = serializer.data.get( "username" )
