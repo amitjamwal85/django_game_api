@@ -40,7 +40,7 @@ class GameView(viewsets.ModelViewSet):
     @action(
         methods=["post", "get"],
         detail=False,
-        permission_classes=[IsAuthenticated],
+        permission_classes=[AllowAny],
         url_path="adds3file",
         url_name="adds3file",
         serializer_class=AddS3FileSerializer,

@@ -21,7 +21,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
+    # 'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
     'import_export',
-    'justchat'
+    # 'justchat'
 ]
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
@@ -136,16 +136,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DjangoDRF.wsgi.application'
-ASGI_APPLICATION = 'DjangoDRF.routing.application'
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
+# ASGI_APPLICATION = 'DjangoDRF.routing.application'
+#
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],
+#         },
+#     },
+# }
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -166,6 +166,14 @@ DATABASES = {
         },
     }
 }
+
+# import dj_database_url
+# DATABASES = {
+#         "default": dj_database_url.config(
+#             default='postgres://vfifdxoy:U8FX6B1yYwMLDQMTYututXjftFkv023E@ruby.db.elephantsql.com:5432/vfifdxoy',
+#             conn_max_age=600
+#         )
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
