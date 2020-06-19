@@ -3,6 +3,7 @@ from rest_framework import status, generics, mixins
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenViewBase
 from rest_framework.viewsets import GenericViewSet
+from rolepermissions.checkers import has_permission
 
 from DjangoDRF import settings
 from DjangoDRF.exceptions import TokenError, InvalidToken
@@ -24,6 +25,8 @@ from graphene_django.views import GraphQLView
 import pickle
 import numpy as np
 import os
+from rolepermissions.roles import assign_role
+
 
 class PrivateGraphQLView(LoginRequiredMixin, GraphQLView):
     pass
@@ -84,10 +87,14 @@ class UserAPIView(mixins.RetrieveModelMixin,
         """
         To register a new user account
         """
-        serializer = RegistrationSerializer(data=request.data)
+        data = request.data
+        print(f"data:{data}")
+        serializer = RegistrationSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.create(validated_data=serializer.validated_data)
             token = RefreshToken.for_user(user)
+
+            # assign_role(user, data.get("role"))
             user = serializer.data
             user_id = User.objects.get(username=user['username'])
             user['user_id'] = user_id.id
@@ -99,6 +106,23 @@ class UserAPIView(mixins.RetrieveModelMixin,
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+    @action(detail=False,
+            methods=['POST'],
+            permission_classes=[IsAuthenticated],
+            serializer_class=PasswordSerializer,
+            url_path='check-permission',
+            url_name='check-permission',
+            )
+    def check_permission(self, request):
+        user = self.request.user
+        l = user.groups.values_list( 'name', flat=True )
+        l_as_list = list( l )
+        print(f" group : {l_as_list}")
+        print(f"check permission {has_permission(user, 'view_posts')}")
+        return Response(
+            {"status": "success"}, status=status.HTTP_200_OK
+        )
 
     @action(detail=False,
             methods=['POST'],
@@ -190,6 +214,7 @@ class PostView(viewsets.ModelViewSet):
 
 
     def create(self, request, *args, **kwargs):
+        print(f"data: {request.data}")
         serializer = self.serializer_class( data=request.data )
         serializer.is_valid( raise_exception=True )
         validated_data = serializer.validated_data

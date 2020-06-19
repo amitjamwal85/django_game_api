@@ -23,6 +23,8 @@ class Server(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
+    first_name = models.CharField(max_length=140, null=True, blank=True)
+    last_name = models.CharField( max_length=140, null=True, blank=True )
     city = models.CharField(max_length=140, null=True, blank=True)
     country = models.CharField(max_length=140, null=True, blank=True)
 
@@ -34,7 +36,7 @@ class UserProfile(models.Model):
 @receiver(post_save, sender=User)
 def setup_user(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
+        UserProfile.objects.create(user=instance, first_name=instance.first_name, last_name=instance.last_name)
 
 
 class Post(models.Model):

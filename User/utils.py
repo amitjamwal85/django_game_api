@@ -22,6 +22,7 @@ def get_user_jwt(request):
         pass
     return user
 
+
 class IsAuthenticated(BasePermission):
     """
     Allows access only to authenticated users.

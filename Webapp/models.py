@@ -9,7 +9,12 @@ STATUS_CHOICES = (
 
 
 class Posts(models.Model):
-    title = models.CharField(max_length=250)
+    title = models.CharField(max_length=250,
+                             unique=True,
+                             error_messages={
+                                "unique": "This title already used."
+                             }
+                             )
     slug = models.SlugField(max_length=250, null=True, blank=True)
     text = models.TextField()
     published_at = models.DateTimeField(auto_now_add=True)

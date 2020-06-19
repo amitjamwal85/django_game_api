@@ -92,14 +92,14 @@ def password_field():
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    #email = serializers.EmailField(validators=[required_and_valid, UniqueValidator(queryset=User.objects.all())])
-    #password = password_field()
+    email = serializers.EmailField(validators=[required_and_valid, UniqueValidator(queryset=User.objects.all())])
+    password = password_field()
     first_name = required_field()
     last_name = required_field()
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'first_name', 'last_name']
+        fields = ['email', 'username', 'first_name', 'last_name', 'password']
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
