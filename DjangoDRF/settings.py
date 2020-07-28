@@ -22,7 +22,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     # 'channels',
-    'rolepermissions',
+    # 'rolepermissions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'sslserver',
     'rest_framework',
     'rest_framework.authtoken',
     'User',
@@ -37,16 +38,15 @@ INSTALLED_APPS = [
     'Games',
     'graphene_django',
     'GraphQLTest',
-    'ESearch',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
     'import_export',
-    # 'justchat'
+    'oauth2_provider',
+    'social_django',
+    'rest_framework_social_oauth2',
+    # 'ESearch',
+    # 'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl_drf',
+    # 'justchat',
 ]
-
-IMPORT_EXPORT_USE_TRANSACTIONS = True
-
-ELASTICSEARCH_DSL = {"default": {"hosts": "localhost:9200"}}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,38 +60,68 @@ MIDDLEWARE = [
     'DjangoDRF.middleware.StackOverflowMiddleware',
 ]
 
-APPEND_SLASH = True
+ROOT_URLCONF = 'DjangoDRF.urls'
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:8080",
-    "http://127.0.0.1:8080",
-    "http://167.86.96.193:9011"
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join( BASE_DIR, 'templates' )]
+        ,
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
+            ],
+        },
+    },
 ]
 
-GRAPHENE = {
-    'SCHEMA': 'DjangoDRF.schema.schema',
-    'MIDDLEWARE': ['graphql_jwt.middleware.JSONWebTokenMiddleware',]
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'social_django.context_processors.backends',
+    'social_django.context_processors.login_redirect',
+)
+
+WSGI_APPLICATION = 'DjangoDRF.wsgi.application'
+# ASGI_APPLICATION = 'DjangoDRF.routing.application'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django',
+        'USER': 'root',
+        'PASSWORD': 'gloadmin123',
+        #'HOST': '167.86.96.193',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+          'autocommit': True,
+        },
+    }
 }
 
+# Password validation
+# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
-# AUTHENTICATION_BACKENDS = [
-#     'graphql_jwt.backends.JSONWebTokenBackend',
-#     'django.contrib.auth.backends.ModelBackend',
-# ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',  # for docs page
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # )
-}
-
-
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 
 SIMPLE_JWT = {
@@ -117,28 +147,55 @@ SIMPLE_JWT = {
 }
 
 
-ROOT_URLCONF = 'DjangoDRF.urls'
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',  # for docs page
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAdminUser',
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    ),
+}
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join( BASE_DIR, 'templates' )]
-        ,
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+AUTHENTICATION_BACKENDS = [
+    # 'graphql_jwt.backends.JSONWebTokenBackend',
+    'social_core.backends.facebook.FacebookAppOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
-WSGI_APPLICATION = 'DjangoDRF.wsgi.application'
-# ASGI_APPLICATION = 'DjangoDRF.routing.application'
-#
+
+SOCIAL_AUTH_FACEBOOK_KEY = '256940478723106'
+SOCIAL_AUTH_FACEBOOK_SECRET = '7f80043529103a3e7f7d80af5e4e91ad'
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email'
+}
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '61960898934-crkmk89ifnj48ben7pb9jot1jo3uq50m.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '8GysF5xDZh59YdBaB2tIAck6'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://167.86.96.193:9011"
+]
+
+GRAPHENE = {
+    'SCHEMA': 'DjangoDRF.schema.schema',
+    'MIDDLEWARE': ['graphql_jwt.middleware.JSONWebTokenMiddleware',]
+}
+
 # CHANNEL_LAYERS = {
 #     'default': {
 #         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -148,52 +205,7 @@ WSGI_APPLICATION = 'DjangoDRF.wsgi.application'
 #     },
 # }
 
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 TESTING = sys.argv[1:2] == ["test"]
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django',
-        'USER': 'root',
-        'PASSWORD': 'gloadmin123',
-        #'HOST': '167.86.96.193',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-          'autocommit': True,
-        },
-    }
-}
-
-# import dj_database_url
-# DATABASES = {
-#         "default": dj_database_url.config(
-#             default='postgres://vfifdxoy:U8FX6B1yYwMLDQMTYututXjftFkv023E@ruby.db.elephantsql.com:5432/vfifdxoy',
-#             conn_max_age=600
-#         )
-#     }
-
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -248,3 +260,6 @@ AUTH_DOMAIN = 'mail.aativamail.com'
 
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/'
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+ELASTICSEARCH_DSL = {"default": {"hosts": "localhost:9200"}}
+APPEND_SLASH = True

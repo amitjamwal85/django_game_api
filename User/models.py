@@ -76,3 +76,12 @@ class Article(models.Model):
 
     def __str__(self):
         return self.headline
+
+
+class Assignment(models.Model):
+    user = models.CharField(max_length=10, default='amit')
+    practice_duration = models.IntegerField(default=0)
+    day = models.DateField()
+
+    class Meta:
+        db_table = "tbl_assigment"
