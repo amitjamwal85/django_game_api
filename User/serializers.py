@@ -9,6 +9,17 @@ from six import text_type
 from User.models import Server, UserProfile, Post, Comments
 
 
+class SocialConvertTokenSerializer(serializers.Serializer):
+    """
+    Serializer for password change endpoint.
+    """
+    grant_type = serializers.CharField(required=True, help_text='convert_token')
+    client_id = serializers.CharField(required=True)
+    client_secret = serializers.CharField(required=True)
+    backend = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
+
+
 class TokenObtainPairSerializer(TokenObtainSerializer):
     @classmethod
     def get_token(cls, user):

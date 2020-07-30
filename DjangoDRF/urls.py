@@ -6,7 +6,8 @@ from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
 from DjangoDRF import schema
 from Games.view import GameView, ContactUsView, LoginView
-from User.view import TokenObtainPairView, TokenRefreshView, UserAPIView, ServerView, UserViewSet, PostView
+from User.view import TokenObtainPairView, TokenRefreshView, UserAPIView, ServerView, UserViewSet, PostView, \
+    SocialConvertTokenView
 from rest_framework.documentation import include_docs_urls
 from graphene_django.views import GraphQLView
 # from rest_framework_simplejwt import views as jwt_views
@@ -15,12 +16,15 @@ from Webapp import views
 
 login = TokenObtainPairView.as_view()
 refresh = TokenRefreshView.as_view()
+auth_create = SocialConvertTokenView.as_view()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('webapp/', include('Webapp.urls')),
-    path('auth/', include('rest_framework_social_oauth2.urls')),
     # path('publisher/', include('ESearch.urls')),
+
+    path('auth/', include('rest_framework_social_oauth2.urls')),
+    url(r'^custom-auth/convert-token/', auth_create, name='auth_create'),
 
     path('game/login/', LoginView.as_view(), name="game-login"),
     # path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
