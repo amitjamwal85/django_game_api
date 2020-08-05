@@ -6,9 +6,32 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import os
 from django.contrib import messages
+import json
 
+from django.views.decorators.csrf import csrf_exempt
+
+from DjangoDRF import settings
 from Webapp.models import  Posts
 from Webapp.tasks import sleepy
+from Webapp.util import extract_parameters
+
+ERR_BAD_PARAM = 400
+
+
+@csrf_exempt
+def register_web(request):
+    try:
+        print(f"settings.TESTING : {settings.TESTING}")
+        required = 'firstName', 'lastName', 'instrument', 'email', 'password', 'type'
+        optional = 'imageUrl', 'facebookId', 'language'
+        try:
+            values = extract_parameters(json.loads(request.body), required, optional)
+            print(f"values : {values}")
+        except KeyError:
+            return HttpResponse(status=ERR_BAD_PARAM)
+        return HttpResponse('success')
+    except Exception as e:
+        print(e)
 
 
 def celery_task(request):

@@ -10,9 +10,10 @@ from User.view import TokenObtainPairView, TokenRefreshView, UserAPIView, Server
     SocialConvertTokenView
 from rest_framework.documentation import include_docs_urls
 from graphene_django.views import GraphQLView
-# from rest_framework_simplejwt import views as jwt_views
+from rest_framework_simplejwt import views as jwt_views
 from Webapp import views
 # from ESearch import views as search_view
+from Webapp.views import register_web
 
 login = TokenObtainPairView.as_view()
 refresh = TokenRefreshView.as_view()
@@ -38,6 +39,8 @@ urlpatterns = [
     # path('search', search_view.search, name='search'),
     path('well-known/pki-validation/<str:key>', views.showcertfile, name='showcertfile'),
     path('chat/', include('justchat.urls')),
+
+    path('register_web/', register_web),
 ]
 
 router = routers.SimpleRouter()

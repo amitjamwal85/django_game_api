@@ -18,7 +18,7 @@ from User.models import Server, Post, Comments
 from User.serializers import TokenObtainPairSerializer, TokenRefreshSerializer, UserSerializer, RegistrationSerializer, \
     ServerSerializer, PasswordSerializer, UserProfileSerializer, PostSerializer, CommentSerializer, EmailSerializer, \
     SocialConvertTokenSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from six import text_type
 from rest_framework.decorators import action
@@ -32,7 +32,8 @@ from graphene_django.views import GraphQLView
 import pickle
 import numpy as np
 import os
-
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 # from rolepermissions.roles import assign_role
 
@@ -73,6 +74,7 @@ class TokenRefreshView(TokenViewBase):
 
 
 ############################################################################################################
+
 
 
 class SocialConvertTokenView(ConvertTokenView, APIView):
@@ -144,6 +146,7 @@ class SocialConvertTokenView(ConvertTokenView, APIView):
         data = {
             'access': text_type(token.access_token),
             'refresh': text_type(token),
+            'expiry_time': settings.SIMPLE_JWT.get('ACCESS_TOKEN_LIFETIME')
         }
         return Response(data, status=status.HTTP_201_CREATED)
 
