@@ -23,7 +23,14 @@ class SocialConvertTokenSerializer(serializers.Serializer):
 class TokenObtainPairSerializer(TokenObtainSerializer):
     @classmethod
     def get_token(cls, user):
-        return RefreshToken.for_user(user)
+        # token = super().get_token(user)
+        # token['iat'] = 'test1'
+        # token['user'] = 'test2'
+        # token['date'] = 'test3'
+        # return token
+        token = RefreshToken.for_user(user)
+        token['iat'] = 'test1'
+        return token
 
     def validate(self, attrs):
         data = super(TokenObtainPairSerializer, self).validate(attrs)

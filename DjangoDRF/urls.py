@@ -24,16 +24,18 @@ urlpatterns = [
     path('webapp/', include('Webapp.urls')),
     # path('publisher/', include('ESearch.urls')),
 
-    path('auth/', include('rest_framework_social_oauth2.urls')),
-    url(r'^custom-auth/convert-token/', auth_create, name='auth_create'),
+    # path('auth/', include('rest_framework_social_oauth2.urls')),
+    # url(r'^custom-auth/convert-token/', auth_create, name='auth_create'),
 
-    path('game/login/', LoginView.as_view(), name="game-login"),
+    # path('game/login/', LoginView.as_view(), name="game-login"),
     # path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
     url('^docs/', include_docs_urls(title='Django DRF', permission_classes=[AllowAny])),
     path('api/token/', login, name="user-login"),
     path('api/token/refresh/', refresh, name='token_refresh'),
+
+
     path( "graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
 
     # path('search', search_view.search, name='search'),
