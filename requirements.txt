@@ -73,7 +73,7 @@ jose==1.0.0
 kiwisolver==1.1.0
 kombu==4.6.11
 l18n==2018.5
-lxml==4.5.0
+lxml==4.6.3
 mailchimp3==3.0.12
 MarkupPy==1.14
 MarkupSafe==1.1.1
