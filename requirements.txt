@@ -68,7 +68,7 @@ intelhex==2.2.1
 ipaddress==1.0.23
 itypes==1.1.0
 jdcal==1.4.1
-Jinja2==2.11.2
+Jinja2==2.11.3
 jmespath==0.10.0
 jose==1.0.0
 kiwisolver==1.1.0
