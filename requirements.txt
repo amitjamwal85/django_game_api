@@ -105,7 +105,7 @@ PyYAML==5.3.1
 regex==2020.4.4
 requests==2.22.0
 requests-oauthlib==1.2.0
-rsa==4.0
+rsa==4.7
 Rx==1.6.1
 s3transfer==0.3.3
 signrequest-python-client==2.1.0
